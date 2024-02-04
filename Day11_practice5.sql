@@ -8,16 +8,14 @@ GROUP BY COUNTRY.Continent
 
 --EX2:
 SELECT 
-  ROUND(
-    CAST(
-      COUNT(texts.email_id)/COUNT(DISTINCT emails.email_id)
-    AS DECIMAL),2) 
-AS activation_rate
-FROM emails
-LEFT JOIN texts
-  ON emails.email_id = texts.email_id
-WHERE texts.signup_action = 'Confirmed'
-      -- ac giảng lỗi sai cho em câu này với, biết là sai mà em kb sai ở đâu TvT
+ROUND(SUM(
+  CASE 
+    WHEN texts.signup_action = 'Confirmed' THEN 1 ELSE 0 
+  END)*1.0 / COUNT(texts.signup_action),2) AS activation_rate
+FROM emails 
+LEFT JOIN texts   
+ON emails.email_id  = texts.email_id
+WHERE emails.email_id IS NOT NULL;
 
 --EX3:
 SELECT b.age_bucket, 
