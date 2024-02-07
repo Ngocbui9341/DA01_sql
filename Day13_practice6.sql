@@ -11,7 +11,24 @@ FROM twt_job_count
 WHERE job_count > 1;
 
 -- ex2: datalemur-highest-grossing
-
+WITH CTE AS (
+SELECT 
+  category, 
+  product, 
+  SUM(spend) AS total_spend 
+FROM product_spend 
+WHERE transaction_date BETWEEN '2022/1/1' AND '2022/12/31'
+GROUP BY category, product
+)
+    (SELECT * FROM CTE
+     WHERE category = 'appliance'
+     ORDER BY total_spend DESC
+     LIMIT 2)
+UNION ALL
+    (SELECT * FROM CTE
+     WHERE category = 'electronics'
+     ORDER BY total_spend DESC
+     LIMIT 2)
 
 -- ex3: datalemur-frequent-callers
 WITH twt_call_records AS (
